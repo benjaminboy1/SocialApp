@@ -11,6 +11,7 @@ import { useRef } from 'react'
 import Input from '../components/Input'
 import Button from '../components/Button'
 import Loading from '../components/Loading'
+import SignUp from './signUp'
 
 
 
@@ -69,7 +70,7 @@ const Login = () => {
         {/** footer */}
             <View style={styles.footer}>
                 <Text style={styles.footerText}>Don't have an account?</Text>
-                <Pressable onPress={{}}>
+                <Pressable onPress={()=> router.push("signUp")}>
                     <Text style={[styles.footerText, {color:theme.colors.primary, fontWeight:theme.fonts.semibold}]}>Sign Up</Text>
                 </Pressable>
             </View>
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: wp(5),
     },
     welcomText: {
+        alignSelf: 'center',
         fontSize: hp(4),
         fontWeight: theme.fonts.bold,
         color: theme.colors.text,
