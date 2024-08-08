@@ -50,8 +50,8 @@ const SignUp = () => {
 
         setLoading(false);
 
-        console.log('session: ', session);
-        console.log('error: ', error);
+        //console.log('session: ', session);
+        //console.log('error: ', error);
         if(error){
             Alert.alert('Sign up', error.message);
         }
@@ -105,7 +105,7 @@ const SignUp = () => {
             <View style={styles.footer}>
                 <Text style={styles.footerText}>Already have an account?</Text>
                 <Pressable onPress={()=> router.back()}>
-                    <Text style={[styles.footerText, {color:theme.colors.primary, fontWeight:theme.fonts.semibold}]}>Sign Up</Text>
+                    <Text style={[styles.footerText, {color:theme.colors.primary, fontWeight:theme.fonts.semibold}]}>Log In</Text>
                 </Pressable>
             </View>
       </View>
