@@ -20,6 +20,7 @@ import Send from './Send';
 import Video from './Video';
 import User from './User';
 import ArrowLeft from './ArrowLeft';
+import Logout from './Logout';
 
 
 
@@ -43,6 +44,7 @@ const icons = {
     threeDotsCircle: ThreeDotsCircle,
     threeDotsHorizontal: ThreeDotsHorizontal,
     send: Send,
+    logout: Logout,
     user: User,
     video: Video,
     arrowLeft: ArrowLeft,

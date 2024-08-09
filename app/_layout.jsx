@@ -5,6 +5,8 @@ import {AuthProvider, useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/superbase'
 import Welcome from './welcome'
 import Home from './(main)/home'
+import { getUserData } from '../services/userService'
+
 
 
 const _layout = () => {
@@ -17,7 +19,7 @@ const _layout = () => {
 
 
 const MainLayout = () => {
-    const {setAuth} = useAuth();
+    const {setAuth, setUserData} = useAuth();
     const router = useRouter();
 
     useEffect(()=>{
@@ -29,6 +31,7 @@ const MainLayout = () => {
                 // move to home screen
 
                 setAuth(session?.user);
+                updateUserData(session?.user)
                 router.replace('/home');
             }else{
                 // set auth null 
@@ -38,6 +41,12 @@ const MainLayout = () => {
             }
         })
     }, []);
+
+    const updateUserData = async (user)=>{
+        let res = await getUserData(user?.id);
+        //console.log('got user data', res);
+        if(res.success) setUserData(res.data);
+    }
 
   return (
     <Stack

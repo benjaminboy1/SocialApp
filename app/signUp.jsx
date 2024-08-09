@@ -11,7 +11,6 @@ import { useRef } from 'react'
 import Input from '../components/Input'
 import Button from '../components/Button'
 import Loading from '../components/Loading'
-import Login from './login'
 import { supabase } from '../lib/superbase'
 
 
