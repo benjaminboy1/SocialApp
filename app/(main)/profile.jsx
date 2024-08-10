@@ -10,6 +10,7 @@ import Icon from '../../assets/fonts/icons';
 import { supabase } from '../../lib/superbase';
 import Avatar from '../../components/Avatar';
 
+
 const Profile = () => {
     const {user, setAuth} = useAuth();
     const router = useRouter();
@@ -48,7 +49,7 @@ const UserHeader = ({user, router, handleLogout}) => {
     return (
         <View style={{flex: 1, backgroundColor: 'white', paddingHorizontal: wp(4)}} >
             <View>
-                <Header title="profile"  showBackButton={true}/>
+                <Header title="profile"  mb={35}/>
                 <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
                         <Icon name="logout"  color={theme.colors.rose}/>
                 </TouchableOpacity>
@@ -62,9 +63,29 @@ const UserHeader = ({user, router, handleLogout}) => {
                             rounded={theme.radius.xxl*1.4}
                             />
 
-                        <Pressable style={styles.editIcon}>
+                        <Pressable style={styles.editIcon} onPress={()=> router.push('editProfile')}>
                             <Icon name="edit" strokeWidth={2.5} size={20} />
                         </Pressable>
+                    </View>
+
+                    {/** username and address */}
+                    <View style={{alignItems: 'center', gap: 4}}>
+                    <Text style={styles.userName}>{user && user?.name}</Text>
+                        <Text style={styles.userName}>{user && user.address}</Text>
+
+                    </View>
+                    {/** email, phone, bio */}
+                    <View>
+                        <View style={{gap: 10}}>
+                            <View style={styles.info}>
+                                <Icon name="mail" size={20} color={theme.colors.textLight} />
+                                <Text style={styles.infoText}>
+                                    {user && user.email}
+                                </Text>
+                            </View>
+
+                        </View>
+
                     </View>
 
                 </View>

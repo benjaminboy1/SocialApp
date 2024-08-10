@@ -3,18 +3,18 @@ import { supabase } from "../lib/superbase";
 export const getUserData = async (userId)=>{
     try{
         const { data, error } = await supabase
-        .from('user')
+        .from('users')
         .select()
         .eq('id', userId)
-        .single();
+        .single()
+
         if(error){
-            return {success: false, msg: error?.message};
+             return {success: false, msg: error?.message}
         }
         return {success: true, data};
+
     }catch(error){
         console.log('got error: ', error);
-        return {success: false, msg: error.message};
+        return {success: false, msg: error.message}
     }
-
-
 }

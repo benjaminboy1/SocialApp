@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { theme } from '../constants/theme';
 import { hp, wp } from '../helpers/common';
 
-const Header = ({title, showBackButton = false, mb=10}) => {
+const Header = ({title, showBackButton = true, mb=10}) => {
     const router = useRouter();
   return (
     <View style={[styles.container, {marginBottom: mb}]}>

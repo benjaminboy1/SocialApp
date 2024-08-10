@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import React, { useEffect } from 'react'
 import { Stack, useRouter } from 'expo-router'
-import {AuthProvider, useAuth } from '../contexts/AuthContext'
+import {AuthProvider, useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/superbase'
 import Welcome from './welcome'
 import Home from './(main)/home'
@@ -31,7 +31,8 @@ const MainLayout = () => {
                 // move to home screen
 
                 setAuth(session?.user);
-                updateUserData(session?.user)
+                updateUserData(session?.user);
+                //console.log('auth user: ', session?.user?.name);
                 router.replace('/home');
             }else{
                 // set auth null 
@@ -40,12 +41,12 @@ const MainLayout = () => {
                 router.replace('/welcome');
             }
         })
-    }, []);
+    },[]);
 
     const updateUserData = async (user)=>{
         let res = await getUserData(user?.id);
-        //console.log('got user data', res);
-        if(res.success) setUserData(res.data);
+         if(res.success) setUserData({...res.data});
+        //console.log('got user data: ', res);
     }
 
   return (

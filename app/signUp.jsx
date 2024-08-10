@@ -42,8 +42,8 @@ const SignUp = () => {
             password,
             options: {
                 data: {
-                    name
-                }
+                   name
+                 }
             }
         });
 

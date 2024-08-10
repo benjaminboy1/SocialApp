@@ -1,9 +1,10 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState,} from "react";
+
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+export const AuthProvider = ({children}) => {
+    const [user,setUser] = useState(null);
 
     const setAuth = authUser=>{
         setUser(authUser);
@@ -20,4 +21,4 @@ export const AuthProvider = ({ children }) => {
     )
 }
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = ()=> useContext(AuthContext);
