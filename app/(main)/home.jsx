@@ -9,6 +9,7 @@ import { wp, hp } from '../../helpers/common';
 import Icon from '../../assets/fonts/icons';
 import { useRouter } from 'expo-router';
 import  Avatar  from '../../components/Avatar';
+import { StatusBar } from 'expo-status-bar';
 
 const Home = () => {
 
@@ -27,6 +28,7 @@ const Home = () => {
 
   return (
     <ScreenWrapper  bg="white">
+        <StatusBar color="dark"/>
      <View style={styles.container}>
         {/** header */}
         <View style={styles.header}>
@@ -39,6 +41,7 @@ const Home = () => {
                         <Icon  name="plus" size={hp(3.2)} strokeWidth={2} color={theme.colors.text}/>
                 </Pressable>
                 <Pressable onPress={()=> router.push('profile')}>
+                    
                        <Avatar 
                         uri={user?.image}
                         size={hp(4.3)}

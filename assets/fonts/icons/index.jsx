@@ -21,6 +21,7 @@ import Video from './Video';
 import User from './User';
 import ArrowLeft from './ArrowLeft';
 import Logout from './Logout';
+import Call from './Call';
 
 
 
@@ -35,6 +36,7 @@ const icons = {
     comment: Comment,
     delete: Delete,
     image: Image,
+    call: Call,
     edit: Edit,
     location: Location,
     lock: Lock,

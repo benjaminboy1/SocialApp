@@ -1,4 +1,4 @@
-import { Alert, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Pressable, StyleSheet, Text, TouchableOpacity, View, } from 'react-native'
 import React from 'react'
 import ScreenWrapper from '../../components/ScreenWrapper'
 import { useAuth } from '../../contexts/AuthContext';
@@ -9,6 +9,8 @@ import { theme } from '../../constants/theme';
 import Icon from '../../assets/fonts/icons';
 import { supabase } from '../../lib/superbase';
 import Avatar from '../../components/Avatar';
+import { StatusBar } from 'expo-status-bar';
+
 
 
 const Profile = () => {
@@ -40,6 +42,9 @@ const Profile = () => {
     }
   return (
     <ScreenWrapper bg="white">
+        <StatusBar style="dark" />
+
+
             <UserHeader user={user} router={router}  handleLogout={handleLogout}/>
     </ScreenWrapper>
   )
@@ -47,7 +52,9 @@ const Profile = () => {
 
 const UserHeader = ({user, router, handleLogout}) => {
     return (
+        
         <View style={{flex: 1, backgroundColor: 'white', paddingHorizontal: wp(4)}} >
+            
             <View>
                 <Header title="profile"  mb={35}/>
                 <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
@@ -80,9 +87,24 @@ const UserHeader = ({user, router, handleLogout}) => {
                             <View style={styles.info}>
                                 <Icon name="mail" size={20} color={theme.colors.textLight} />
                                 <Text style={styles.infoText}>
-                                    {user && user.email}
+                                    {user && user?.email}
                                 </Text>
                             </View>
+                            {
+                                user && user.phoneNumber && (
+                                    <View style={styles.info}>
+                                        <Icon name="call" size={20} color={theme.colors.textLight} />
+                                            <Text style={styles.infoText}>
+                                                {user && user?.phoneNumber}
+                                            </Text>
+                                    </View>
+                                )
+                            }
+                            {
+                                user && user.bio && (
+                                    <Text style={styles.infoText}>{user.bio}kkkk</Text>
+                                )
+                            }
 
                         </View>
 

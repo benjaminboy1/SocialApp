@@ -12,6 +12,7 @@ export const AuthProvider = ({children}) => {
 
     const setUserData = userData =>{
         setUser({...userData});
+        //console.log('old user: ', user);
     }
 
     return(
