@@ -43,8 +43,6 @@ const Profile = () => {
   return (
     <ScreenWrapper bg="white">
         <StatusBar style="dark" />
-
-
             <UserHeader user={user} router={router}  handleLogout={handleLogout}/>
     </ScreenWrapper>
   )
@@ -102,7 +100,7 @@ const UserHeader = ({user, router, handleLogout}) => {
                             }
                             {
                                 user && user.bio && (
-                                    <Text style={styles.infoText}>{user.bio}kkkk</Text>
+                                    <Text style={styles.infoText}>{user.bio}</Text>
                                 )
                             }
 
