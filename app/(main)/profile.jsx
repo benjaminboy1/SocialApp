@@ -12,7 +12,6 @@ import Avatar from '../../components/Avatar';
 import { StatusBar } from 'expo-status-bar';
 
 
-
 const Profile = () => {
     const {user, setAuth} = useAuth();
     const router = useRouter();
@@ -74,14 +73,14 @@ const UserHeader = ({user, router, handleLogout}) => {
                     </View>
 
                     {/** username and address */}
-                    <View style={{alignItems: 'center', gap: 4}}>
+                    <View style={{alignItems: 'center', gap: 10}}>
                     <Text style={styles.userName}>{user && user?.name}</Text>
-                        <Text style={styles.userName}>{user && user.address}</Text>
+                        <Text style={styles.userAddress}>{user && user.address}</Text>
 
                     </View>
                     {/** email, phone, bio */}
-                    <View>
-                        <View style={{gap: 10}}>
+                    <View style={styles.others}>
+                        <View style={{gap: 15}}>
                             <View style={styles.info}>
                                 <Icon name="mail" size={20} color={theme.colors.textLight} />
                                 <Text style={styles.infoText}>
@@ -150,6 +149,15 @@ const styles = StyleSheet.create({
         fontSize: hp(3),
         fontWeight: '500',
         color: theme.colors.textDark
+    },
+    userAddress: {
+        fontSize: hp(2),
+        fontWeight:'500',
+        color: theme.colors.textLight
+    },
+    others:{
+        gap: 10,
+        top: 50
     },
     info: {
         flexDirection: 'row',
