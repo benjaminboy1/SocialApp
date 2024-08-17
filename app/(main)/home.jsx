@@ -28,7 +28,7 @@ const Home = () => {
 
   return (
     <ScreenWrapper  bg="white">
-        <StatusBar color="dark"/>
+        <StatusBar style="dark" />
      <View style={styles.container}>
         {/** header */}
         <View style={styles.header}>

@@ -35,4 +35,4 @@ export const updateUser = async (userId, data)=>{
         console.log('got error: ', error);
         return {success: false, msg: error.message}
     }
-}
+};
