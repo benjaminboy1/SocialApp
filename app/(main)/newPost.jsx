@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Pressable } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Pressable, Alert } from 'react-native'
 import React, { useState } from 'react'
 import ScreenWrapper from '../../components/ScreenWrapper'
 import Header from '../../components/Header'
@@ -13,9 +13,11 @@ import { StatusBar } from 'expo-status-bar'
 import Icon from '../../assets/fonts/icons'
 import Button from '../../components/Button'
 import * as ImagePicker from 'expo-image-picker';
-import { supabaseUrl } from '../../constants'
 import { getSupabaseFileUrl } from '../../services/imageService'
 import { Image } from 'expo-image';
+import {Video} from 'expo-av';
+import * as FileSystem from 'expo-file-system';
+import { createOrUpdatePost } from '../../services/postService'
 
 
 
@@ -72,7 +74,6 @@ const NewPost = () => {
           if(file.includes('postImage')){
             return 'image';
           }
-
           return 'video';
   }
 
@@ -81,22 +82,50 @@ const NewPost = () => {
     if(isLocalFile(file)){
       return file.uri;
     }
+    
 
     return getSupabaseFileUrl(file)?.uri;
 
   }
 
   const onSubmit = async (submited)=> {
+      //console.log('body: ', bodyRef.current);
+      //console.log('file ', file);
+      if(!bodyRef.current && !file){
+        Alert.alert('Post', "Please choose an image or add post body");
+        return;
+      }
+
+      let data = {
+        file,
+        body: bodyRef.current,
+        userId: user?.id,
+      }
+
+      // create post
+      setLoading(true);
+      let res = await createOrUpdatePost(data);
+      setLoading(false);
+      //console.log('post res: ', res);
+      if(res.success){
+        setFile(null);
+        bodyRef.current = '';
+        editorRef.current?.setContentHTML('');
+        router.back(); 
+
+      }else{
+        Alert.alert('Post', res.msg);
+      }
 
   }
 
-  //console.log('file uri: ', getFileUri(file));
+  console.log('file uri: ', getFileUri(file));
   
 
 
   return (
     <ScreenWrapper bg="white">
-             <StatusBar style="dark" />
+             <StatusBar style="dark" /> 
 
       <View style={styles.container}>
         <Header title="Create Post" />
@@ -129,9 +158,18 @@ const NewPost = () => {
                         <View style={styles.file}>
                           {
                             getFileType(file) == 'video'? (
-                              <></>
+                              <Video 
+    
+                                  style={{flex: 1}}
+                                  source={{ uri: getFileUri(file) }}
+                                  useNativeControls
+                                  resizeMode="cover"
+                                  isLooping
+                                  shouldPlay={true}
+                                  nError={(error) => console.log('Video playback error:', error)}
+                              />
                             ):(
-                              <Image source={{uri: getFileUri(file)}} resizeMode='cover' style={{flex: 1}} />
+                              <Image source={{uri: getFileUri(file)}} contentFit='cover' style={{flex: 1}} />
                             )
                           }
                             <Pressable  style={styles.closeIcon} onPress={()=> setFile(null)}>
@@ -253,7 +291,7 @@ const styles = StyleSheet.create({
     right: 10,
     padding: 7,
     borderRadius: 50,
-    backgroundColor: 'rgba(255,0,0, 0.6)'
+    backgroundColor: 'rgba(255,0,0, 0.7)'
    // shadowColor: theme.colors.textLight,
    // shadowOffset: {width: 0, height: 3},
    // shadowOpacity: 0.6,
