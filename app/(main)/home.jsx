@@ -1,5 +1,5 @@
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Alert, Pressable, StyleSheet, Text, View, FlatList } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { Button } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
@@ -10,11 +10,35 @@ import Icon from '../../assets/fonts/icons';
 import { useRouter } from 'expo-router';
 import  Avatar  from '../../components/Avatar';
 import { StatusBar } from 'expo-status-bar';
+import { fetchPosts } from '../../services/postService';
+import PostCard from '../../components/PostCard';
+
+var limit = 0;
 
 const Home = () => {
 
     const {user, setAuth} = useAuth();
     const router = useRouter();
+
+    const [posts, setPosts] = useState([]);
+
+    useEffect(()=>{
+        getPosts();
+    },[])
+
+    const getPosts = async ()=>{
+        // call the api here
+        limit = limit + 10;
+
+        console.log('fetching post: ', limit);
+        let res = await fetchPosts(limit);
+        //console.log('got posts result: ', res);
+        //console.log('user ', res.data[0].user);
+
+        if(res.success){
+            setPosts(res.data);
+        }
+    }
 
     //console.log('user: ', user);
  
@@ -52,6 +76,21 @@ const Home = () => {
             </View>
 
         </View>
+
+        {/** post container */}
+        <FlatList 
+                data={posts}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.listStyle}
+                keyExtractor={item=> item.id.toString()}
+                renderItem={({item})=>  <PostCard
+                                            item={item}
+                                            currentuser={user}
+                                            router={router}
+                                            />
+            }
+            />
+
     
     </View>
       {/**<Button title="logout" onPress={onLogout} /> */}
