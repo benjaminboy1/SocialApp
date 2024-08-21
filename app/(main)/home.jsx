@@ -12,6 +12,8 @@ import  Avatar  from '../../components/Avatar';
 import { StatusBar } from 'expo-status-bar';
 import { fetchPosts } from '../../services/postService';
 import PostCard from '../../components/PostCard';
+import Loading from '../../components/Loading';
+import { getUserData } from '../../services/userService';
 
 var limit = 0;
 
@@ -22,8 +24,31 @@ const Home = () => {
 
     const [posts, setPosts] = useState([]);
 
+
+    // for realtime posts
+    const handlePostEvent = async (payload) => {
+        //console.log('got post event: ', payload);
+        if(payload.eventType == 'INSERT' && payload?.new?.id){
+                    let newPost = {...payload.new}; 
+                    let  res = await getUserData(newPost.userId);
+                     newPost.user = res.success? res.data: {};
+                     setPosts(prevPosts => [newPost, ...prevPosts]);
+        }
+    };
+
     useEffect(()=>{
+        
+        let postChannel = supabase
+        .channel('posts')
+        .on('postgres_changes', {event: '*', schema: 'public', table: 'posts'}, handlePostEvent)
+        .subscribe();
+
+
         getPosts();
+
+        return ()=>{
+            supabase.removeChannel(postChannel);
+        }
     },[])
 
     const getPosts = async ()=>{
@@ -89,8 +114,13 @@ const Home = () => {
                                             router={router}
                                             />
             }
+            ListFooterComponent={(
+                <View style={{marginVertical: posts.length==0? 200: 30}}>
+                    <Loading/>
+                </View>
+            )}
             />
-
+            
     
     </View>
       {/**<Button title="logout" onPress={onLogout} /> */}

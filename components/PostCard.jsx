@@ -1,11 +1,32 @@
 import { StyleSheet, Text, View, TouchableOpacity} from 'react-native'
 import React from 'react'
 import { theme } from '../constants/theme'
-import { hp } from '../helpers/common'
+import { hp, wp } from '../helpers/common'
 import Avatar from './Avatar'
 import moment from "moment"
 import Icon from '../assets/fonts/icons'
+import RenderHtml from 'react-native-render-html';
+import { getSupabaseFileUrl } from '../services/imageService'
+import {Image} from 'expo-image';
+import {Video} from 'expo-av';
 
+
+const textStyle = {
+    color: theme.colors.dark,
+    fontSize: hp(1.75)
+};
+
+const tagsStyles = {
+    div: textStyle,
+    p: textStyle,
+    ol: textStyle,
+    h1: {
+        color: theme.colors.dark
+    },
+    h4: {
+        color: theme.colors.dark
+    },
+}
 
 const PostCard = ({
     item,
@@ -28,7 +49,8 @@ const PostCard = ({
     }
 
     const createdAt = moment(item?.created_at).format('MMM D');
-
+    const likes = [];
+    const liked = false;
 
     //console.log('post item: ', item);
   return (
@@ -56,11 +78,81 @@ const PostCard = ({
 
         <View style={styles.content}>
             <View style={styles.postBody}>
-                <Text>{item.body}</Text>
+              {  
+                    item?.body && (
+                        <RenderHtml
+                        contentWidth={wp(100)}
+                        source={{html: item?.body}}
+                        tagsStyles={tagsStyles}
+                        />
+                    )
+              }
                 
             </View>
+            {/** post image */}
+
+            {
+                item?.file && item?.file?.includes('postImages') && (
+                    <Image
+                        source={getSupabaseFileUrl(item?.file)}
+                        transition={100}
+                        style={styles.postMedia}
+                        contentFit='cover'
+                    />
+                )
+            }
+
+            {/** post video */}
+
+            {
+                item?.file && item?.file?.includes('postVideos') && (
+                    <Video
+                        style={[styles.postMedia, {height: hp(30)}]}
+                        source={getSupabaseFileUrl(item?.file)}
+                        useNativeControls
+                        resizeMode='cover'
+                        isLooping
+
+                        />
+                )  
+            }
 
         </View>
+
+        {/** like, comment & share */}
+
+        
+           <View style={[styles.footer, {flexDirection: 'row'}]}>
+
+           <View style={styles.footerButton}>
+                <TouchableOpacity>
+                    <Icon name="heart" size={24} fill={liked? theme.colors.rose: 'transparent'} color={liked? theme.colors.rose: theme.colors.textLight}/>
+                </TouchableOpacity>
+                <Text style={styles.count}>
+                    {
+                        likes?.length
+                    }
+                </Text>
+            </View>
+            <View style={styles.footerButton}>
+                <TouchableOpacity>
+                    <Icon name="comment" size={24} color={theme.colors.textLight}/>
+                </TouchableOpacity>
+                <Text style={styles.count}>
+                    {
+                        0
+                    }
+                </Text>
+            </View>
+            <View style={styles.footerButton}>
+                <TouchableOpacity>
+                    <Icon name="share" size={24} color={theme.colors.textLight}/>
+                </TouchableOpacity>
+            </View>
+
+           </View>
+            
+            
     </View>
   )
 }
@@ -78,7 +170,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderWidth: 0.5,
         borderColor: theme.colors.gray,
-        shadowColor: '#000'
+        shadowColor: '#000',
+        
     },
     header: {
         flexDirection: 'row',
@@ -114,6 +207,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     footer: {
+        direction: 'row',
         flexDirection: 'row',
         alignItems: 'center',
         gap: 15
