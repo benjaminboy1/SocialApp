@@ -23,6 +23,8 @@ const Home = () => {
     const router = useRouter();
 
     const [posts, setPosts] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
+
 
 
     // for realtime posts
@@ -44,7 +46,7 @@ const Home = () => {
         .subscribe();
 
 
-        getPosts();
+        //getPosts();
 
         return ()=>{
             supabase.removeChannel(postChannel);
@@ -53,7 +55,9 @@ const Home = () => {
 
     const getPosts = async ()=>{
         // call the api here
-        limit = limit + 10;
+
+        if(!hasMore) return null;
+        limit = limit + 4;
 
         console.log('fetching post: ', limit);
         let res = await fetchPosts(limit);
@@ -61,6 +65,7 @@ const Home = () => {
         //console.log('user ', res.data[0].user);
 
         if(res.success){
+            if(posts.length==res.data.length) setHasMore(false);
             setPosts(res.data);
         }
     }
@@ -114,9 +119,18 @@ const Home = () => {
                                             router={router}
                                             />
             }
-            ListFooterComponent={(
+            onEndReached={()=>{
+                getPosts();
+                //console.log('got to the end');
+            }}
+            onzendReachedThreshold={0}
+            ListFooterComponent={hasMore? (
                 <View style={{marginVertical: posts.length==0? 200: 30}}>
                     <Loading/>
+                </View>
+            ):(
+                <View style={{marginVertical: 30}}>
+                    <Text style={styles.noPosts}>No more Posts</Text>
                 </View>
             )}
             />

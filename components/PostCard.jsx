@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, TouchableOpacity} from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { theme } from '../constants/theme'
 import { hp, wp } from '../helpers/common'
 import Avatar from './Avatar'
@@ -9,6 +9,7 @@ import RenderHtml from 'react-native-render-html';
 import { getSupabaseFileUrl } from '../services/imageService'
 import {Image} from 'expo-image';
 import {Video} from 'expo-av';
+import { createPostLike } from '../services/postService'
 
 
 const textStyle = {
@@ -44,13 +45,33 @@ const PostCard = ({
         shadowRadius: 6,
         elevation: 1
     }
+
+    const [likes, setLikes] = useState([])
+
+
+    useEffect(()=> {
+            setLikes(!item?.postLikes);
+    }, [])
     const openPostDetails = ()=>{
         // postsDetailsOpen
     }
 
+    const onLike = async ()=>{
+        let data = { 
+            userId: currentUser?.id,
+            postId: item?.id
+        }
+        let res = await createPostLike(data);
+        console.log('res: ', res);
+        if(!res.success){
+            Alert.alert('Post', 'something went wrong!');
+        }
+    }
+
     const createdAt = moment(item?.created_at).format('MMM D');
-    const likes = [];
-    const liked = false;
+    
+    const liked = likes.filter(like=> like.userId==currentUser?.id)[0]? true: false;
+        //console.log('post item: ', item);
 
     //console.log('post item: ', item);
   return (
@@ -125,7 +146,7 @@ const PostCard = ({
            <View style={[styles.footer, {flexDirection: 'row'}]}>
 
            <View style={styles.footerButton}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={onLike}>
                     <Icon name="heart" size={24} fill={liked? theme.colors.rose: 'transparent'} color={liked? theme.colors.rose: theme.colors.textLight}/>
                 </TouchableOpacity>
                 <Text style={styles.count}>
