@@ -1,6 +1,7 @@
 import { supabase } from "../lib/superbase";
 import { uploadFile } from "./imageService";
 
+
 export const createOrUpdatePost = async (post)=>{
         try{
             // upload image
@@ -60,42 +61,17 @@ export const fetchPosts = async (limit=10)=>{
     }
 }
 
+
 export const createPostLike = async (postLike)=>{
     try{
         // fetch likes from the database
 
-        const {data, error} = await supabase
+        const {data, error } = await supabase
             .from('postLikes')
             .insert(postLike)
             .select()
             .single();
 
-
-      
-        if(error){
-            console.log('postLike error: ', error);
-            return {success: false, msg: 'Could not like the postt'};
-        }
-
-        return {success: true, data: data};
-       
-    }catch(error){
-        console.log('fetchPosts error: ', error);
-        return {success: false,msg: 'Could not like the post'};
-    }
-}
-
-export const removePostLike = async (postId, userId)=>{
-    try{
-        // fetch likes from the database
-
-        const {data, error} = await supabase
-            .from('postLike')
-            .delete()
-            .explain('userId', userId)
-            .explain('postId', postId)
-
-      
         if(error){
             console.log('postLike error: ', error);
             return {success: false, msg: 'Could not like the post'};
@@ -104,8 +80,32 @@ export const removePostLike = async (postId, userId)=>{
         return {success: true, data: data};
        
     }catch(error){
-        console.log('fetchPosts error: ', error);
-        return {success: false,msg: 'Could not like the post'};
+        console.log('postLike error: ', error);
+        return {success: false, msg: 'Could not like the post'};
     }
 }
+
+export const removePostLike = async (postId, userId)=>{
+    try{
+        // fetch likes from the database
+
+        const { error } = await supabase
+        .from('postLikes')
+        .delete()
+        .eq('userId', userId) // replace "userId" with the actual column name
+        //.eq('postId', postId)
+    
+        if(error){
+            console.log('postLike error: ', error);
+            return {success: false, msg: 'Could not remove the post like'};
+        }
+
+        return {success: true};
+       
+    }catch(error){
+        console.log('postLike error: ', error);
+        return {success: false, msg: 'Could not remove the post like'};
+    }
+}
+
 

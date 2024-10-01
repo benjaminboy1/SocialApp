@@ -39,7 +39,7 @@ const EditProfile = () => {
             setUser({
                 name: currentUser.name || '',
                 phoneNumber: currentUser.phoneNumber || '',
-                image: currentUser.image || null,
+                //image: currentUser.image || null,
                 address: currentUser.address || '',
                 bio: currentUser.bio || '',
 
@@ -60,13 +60,13 @@ const EditProfile = () => {
         if (!result.canceled) {
           setUser({...user, image: result.assets[0]});
         }
-
+ 
     }
     
     const onSubmit = async ()=>{
         let userData = {...user};
         let {name, phoneNumber, address, image, bio} = userData;
-        if(!name || !phoneNumber || !address || !bio || !image){
+        if(!name || !phoneNumber || !address || !bio){
             Alert.alert('Profile', "Please fill all the fields");
             return;
         }
@@ -82,7 +82,7 @@ const EditProfile = () => {
         const res = await updateUser(currentUser?.id, userData);
         setLoading(false);
 
-        //console.log('update user result: ', res);
+        console.log('update user result: ', res);
         if(res.success){
             setUserData({...currentUser, ...userData});
             router.back();
